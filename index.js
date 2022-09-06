@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import 'dotenv/config';
+import { userRoutes } from "./routes/user.routes.js";
 
 const PORT = process.env.PORT;
 const router = express.Router();
@@ -16,7 +17,6 @@ app.use(cors({
 // MIDDLEWARES
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 // MONGOOSE CONNECTION
 mongoose
@@ -36,6 +36,7 @@ router.get('/', (req, res) => res.send('sucessfully conected to Mongo'));
 
 //SERVER USE ROUTES
 app.use('/', router);
+app.use('/user', userRoutes );
 
 //SERVER CONNECTION
 const server = app.listen(PORT, () => {
