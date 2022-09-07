@@ -8,6 +8,15 @@ const PORT = process.env.PORT;
 const router = express.Router();
 const app = express();
 
+
+//headers setups
+/* server.use((req, res, next) => {
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control- Allow-Credentials', true);
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+}); */
+
 // CORS
 app.use(cors({
     origin: '*',
@@ -36,7 +45,7 @@ router.get('/', (req, res) => res.send('sucessfully conected to Mongo'));
 
 //SERVER USE ROUTES
 app.use('/', router);
-app.use('/user', userRoutes );
+app.use('/user', userRoutes);
 
 //SERVER CONNECTION
 const server = app.listen(PORT, () => {
