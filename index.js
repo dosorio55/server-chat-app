@@ -8,7 +8,6 @@ const PORT = process.env.PORT;
 const router = express.Router();
 const app = express();
 
-
 //headers setups
 /* server.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -46,6 +45,18 @@ router.get('/', (req, res) => res.send('sucessfully conected to Mongo'));
 //SERVER USE ROUTES
 app.use('/', router);
 app.use('/user', userRoutes);
+
+// NO ROUTE FOUND
+app.use('*', (req, res, next) => {
+    const error = new Error('Route not found');
+    error.status = 404;
+    next(error);
+});
+
+// ERROR CONTROLL
+app.use((err, req, res, next) => {
+    return res.status(err.status || 500).json(err.message || 'Unexpected error');
+});
 
 //SERVER CONNECTION
 const server = app.listen(PORT, () => {

@@ -5,7 +5,6 @@ export const register = async (req, res, next) => {
 
     const { userName, password } = req.body;
 
-
     try {
         const prevUserCheck = await Users.findOne({ username: userName });
 
@@ -24,8 +23,7 @@ export const register = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-
-}
+};
 
 export const login = async (req, res, next) => {
     try {
@@ -59,5 +57,19 @@ export const setAvatar = async (req, res, next) => {
         })
     } catch (error) {
         next(error)
+    }
+}
+
+export const getAllUsers = async (req, res, next) => {
+    try {
+        const users = await Users.find({ _id: { $ne: req.params.id } }).select([
+            "email",
+            "username",
+            "avatarImage",
+            "_id",
+        ]);
+        return res.json(users);
+    } catch (error) {
+        next(error);
     }
 }
