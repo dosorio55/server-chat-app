@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import 'dotenv/config';
 import { userRoutes } from "./routes/user.routes.js";
 import { messagesRoutes } from "./routes/message.routes.js";
+import { Server } from "socket.io";
 
 const PORT = process.env.PORT;
 const router = express.Router();
@@ -63,4 +64,27 @@ app.use((err, req, res, next) => {
 //SERVER CONNECTION
 const server = app.listen(PORT, () => {
     console.log(`chat running in http://localhost:${PORT}`)
+});
+
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        credentials: true,
+    },
+});
+
+global.onlineUsers = new Map();
+io.on("connection", (socket) => {
+    global.chatSocket = socket;
+    socket.on("add-user", (userId) => {
+        console.log(userId);
+        onlineUsers.set(userId, socket.id);
+    });
+
+    socket.on("send-msg", (data) => {
+        const sendUserSocket = onlineUsers.get(data.to);
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit("msg-recieve", data.message);
+        }
+    });
 });
