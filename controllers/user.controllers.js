@@ -28,7 +28,7 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
     try {
         const { userName, password } = req.body;
-        const user = await Users.findOne({ userName });
+        const user = await Users.findOne({username: userName });
         if (!user)
             return res.json({ msg: "Incorrect Username or Password" });
 
@@ -38,8 +38,8 @@ export const login = async (req, res, next) => {
             return res.json({ msg: "Incorrect Username or Password" });
         delete user.password;
         return res.json({ user, msg: 'logged in!', status: 201 });
-    } catch (ex) {
-        next(ex);
+    } catch (error) {
+        next(error);
     }
 };
 
